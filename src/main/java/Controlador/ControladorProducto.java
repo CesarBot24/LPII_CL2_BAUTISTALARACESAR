@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.jdbc.core.namedparam.ParsedSql;
+
 import Dao.TblProductoImp;
 import model.TblProductocl2;
 
@@ -20,7 +22,7 @@ public class ControladorProducto extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public ControladorProducto() {
-        super();
+        //super();
         // TODO Auto-generated constructor stub
     }
 
@@ -40,8 +42,23 @@ public class ControladorProducto extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		String nombre = request.getParameter("nombre");
+		double preVenta = Double.parseDouble(request.getParameter("preVenta"));
+		double preCompra = Double.parseDouble(request.getParameter("preCompra"));
+		String estado = request.getParameter("estado");
+		String descripcion = request.getParameter("descripcion");		
+		TblProductocl2 producto = new TblProductocl2();
+		TblProductoImp crud = new TblProductoImp();
+		producto.setNombrecl2(nombre);
+		producto.setPreciocompcl2(preCompra);
+		producto.setPrecioventacl2(preVenta);
+		producto.setEstadocl2(estado);
+		producto.setDescripcl2(descripcion);
+		
+		crud.RegistrarProducto(producto);
+		List<TblProductocl2> listadoproductos = crud.ListarProductos();
+		request.setAttribute("listadoproductos", listadoproductos);
+		request.getRequestDispatcher("/ListadoProductos.jsp").forward(request, response);
 	}
 
 }
